@@ -1,0 +1,54 @@
+TAP version 14
+# Subtest: sync
+    1..2
+    not ok 1 - should be equal
+      ---
+      compare: ===
+      at:
+        fileName: test\sync.js
+        lineNumber: 26
+        columnNumber: 15
+        isToplevel: true
+      stack: |
+        test/sync.js:26:15
+      source: "        if (err) t.fail(err)\r
+      
+        \        else {\r
+      
+        \            t.equal(stat.mode & 0777, 0755);\r
+      
+        --------------^
+      
+        \            t.ok(stat.isDirectory(), 'target not a directory');\r
+      
+        \            t.end();\n"
+      diff: |
+        --- expected
+        +++ actual
+        @@ -1,1 +1,1 @@
+        -493
+        +438
+      ...
+    
+    ok 2 - target not a directory
+not ok 1 - sync # time=36.063ms
+  ---
+  at:
+    fileName: test\sync.js
+    lineNumber: 8
+    columnNumber: 1
+    typeName: Object
+  source: "const test = require('tap').test;\r
+  
+    \r
+  
+    test('sync', function (t) {\r
+  
+    ^
+  
+    \    t.plan(2);\r
+  
+    \    const x = Math.floor(Math.random() * Math.pow(16,4)).toString(16);\n"
+  ...
+
+1..1

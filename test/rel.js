@@ -1,6 +1,5 @@
 /* Tests borrowed from substack's node-mkdirp
  * https://github.com/substack/node-mkdirp */
-
 const mkpath = require('../');
 const fs = require('fs');
 const test = require('tap').test;

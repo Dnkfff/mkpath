@@ -1,14 +1,14 @@
 /* Tests borrowed from substack's node-mkdirp
  * https://github.com/substack/node-mkdirp */
 
-var mkpath = require('../');
-var path = require('path');
-var fs = require('fs');
-var test = require('tap').test;
+const mkpath = require('../');
+const path = require('path');
+const fs = require('fs');
+const test = require('tap').test;
 
 test('root', function (t) {
     // '/' on unix, 'c:/' on windows.
-    var file = path.resolve('/');
+    let file = path.resolve('/');
 
     mkpath(file, 0755, function (err) {
         if (err) throw err

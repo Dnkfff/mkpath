@@ -1,0 +1,60 @@
+TAP version 14
+# Subtest: sync perm
+    1..2
+    not ok 1 - should be equal
+      ---
+      compare: ===
+      at:
+        fileName: test\perm_sync.js
+        lineNumber: 16
+        columnNumber: 15
+        isToplevel: true
+      stack: |
+        test/perm_sync.js:16:15
+      source: "        if (err) t.fail(err)\r
+      
+        \        else {\r
+      
+        \            t.equal(stat.mode & 0777, 0755);\r
+      
+        --------------^
+      
+        \            t.ok(stat.isDirectory(), 'target not a directory');\r
+      
+        \            t.end();\n"
+      diff: |
+        --- expected
+        +++ actual
+        @@ -1,1 +1,1 @@
+        -493
+        +438
+      ...
+    
+    ok 2 - target not a directory
+not ok 1 - sync perm # time=32.664ms
+  ---
+  at:
+    fileName: test\perm_sync.js
+    lineNumber: 8
+    columnNumber: 1
+    typeName: Object
+  source: "const test = require('tap').test;\r
+  
+    \r
+  
+    test('sync perm', function (t) {\r
+  
+    ^
+  
+    \    t.plan(2);\r
+  
+    \    let file = '/tmp/' + (Math.random() * (1<<30)).toString(16) +
+    '.json';\n"
+  ...
+
+# Subtest: sync root perm
+    1..1
+    ok 1 - target not a directory
+ok 2 - sync root perm # time=1.648ms
+
+1..2

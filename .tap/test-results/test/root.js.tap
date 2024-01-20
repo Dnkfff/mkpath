@@ -1,0 +1,7 @@
+TAP version 14
+# Subtest: root
+    ok 1 - target is a directory
+    1..1
+ok 1 - root # time=11.961ms
+
+1..1

@@ -1,17 +1,17 @@
 /* Tests borrowed from substack's node-mkdirp
  * https://github.com/substack/node-mkdirp */
 
-var mkpath = require('../');
-var fs = require('fs');
-var test = require('tap').test;
+const mkpath = require('../');
+const fs = require('fs');
+const test = require('tap').test;
 
 test('umask sync modes', function (t) {
     t.plan(2);
-    var x = Math.floor(Math.random() * Math.pow(16,4)).toString(16);
-    var y = Math.floor(Math.random() * Math.pow(16,4)).toString(16);
-    var z = Math.floor(Math.random() * Math.pow(16,4)).toString(16);
+    const x = Math.floor(Math.random() * Math.pow(16,4)).toString(16);
+    const y = Math.floor(Math.random() * Math.pow(16,4)).toString(16);
+    const z = Math.floor(Math.random() * Math.pow(16,4)).toString(16);
 
-    var file = '/tmp/' + [x,y,z].join('/');
+    let file = '/tmp/' + [x,y,z].join('/');
 
     try {
         mkpath.sync(file);
