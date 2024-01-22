@@ -10,7 +10,7 @@ test('root', function (t) {
     // '/' on unix, 'c:/' on windows.
     let file = path.resolve('/');
 
-    mkpath(file, 0755, function (err) {
+    mkpath(file, 0o755, function (err) {
         if (err) throw err
         fs.stat(file, function (er, stat) {
             if (er) throw er

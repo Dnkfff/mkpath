@@ -15,9 +15,9 @@ test('sync', function (t) {
     console.log('z = ' + z)
 
     let file = '/tmp/' + [x,y,z].join('/');
-
+    
     try {
-        let cord = mkpath.sync(file, 0755);
+        let cord = mkpath.sync(file, 0o755);
         console.log(typeof cord)
     } catch (err) {
         t.fail(err);
@@ -27,7 +27,7 @@ test('sync', function (t) {
     fs.stat(file, function (err, stat) {
         if (err) t.fail(err)
         else {
-            t.equal(stat.mode & 0777, 0755);
+            t.equal(stat.mode & 0o777, 0o755);
             t.ok(stat.isDirectory(), 'target not a directory');
             t.end();
         }

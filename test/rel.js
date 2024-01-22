@@ -15,13 +15,13 @@ test('rel', function (t) {
     
     let file = [x,y,z].join('/');
     
-    mkpath(file, 0755, function (err) {
+    mkpath(file, 0o755, function (err) {
         if (err) t.fail(err);
         else fs.stat(file, function (err, stat) {
             if (err) t.fail(err)
             else {
                 process.chdir(cwd);
-                t.equal(stat.mode & 0777, 0755);
+                t.equal(stat.mode & 0o777, 0o755);
                 t.ok(stat.isDirectory(), 'target not a directory');
                 t.end();
             }
