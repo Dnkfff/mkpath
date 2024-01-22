@@ -4,7 +4,7 @@ const mkpath = require('../');
 const fs = require('fs');
 const test = require('tap').test;
 
-let ps = [ '', 'tmp' ];
+let ps = ['', 'tmp'];
 
 for (let i = 0; i < 25; i++) {
     const dir = Math.floor(Math.random() * Math.pow(16,4)).toString(16);
@@ -20,7 +20,7 @@ test('chmod-pre', function (t) {
         fs.stat(file, function (er, stat) {
             t.ifError(er, 'should exist');
             t.ok(stat && stat.isDirectory(), 'should be directory');
-            t.equal(stat && stat.mode & 0777, mode, 'should be 0744');
+            t.equal(stat && stat.mode & 0777, mode, 'should be 0o744');
             t.end();
         });
     });

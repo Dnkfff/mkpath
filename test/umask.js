@@ -19,6 +19,8 @@ test('implicit mode from umask', function (t) {
         else fs.stat(file, function (err, stat) {
             if (err) t.fail(err)
             else {
+                /*The signature '(): number' of 'process.umask' is deprecated.ts(6387)
+                  process.d.ts(1296, 20): The declaration was marked as deprecated here. */
                 t.equal(stat.mode & 0777, 0777 & (~process.umask()));
                 t.ok(stat.isDirectory(), 'target not a directory');
                 t.end();
