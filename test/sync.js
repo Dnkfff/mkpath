@@ -1,9 +1,9 @@
 /* Tests borrowed from substack's node-mkdirp
  * https://github.com/substack/node-mkdirp */
 
-const mkpath = require('../');
-const fs = require('fs');
-const test = require('tap').test;
+import { sync } from '../';
+import { stat as _stat } from 'fs';
+import { test } from 'tap';
 
 test('sync', function (t) {
     t.plan(2);
@@ -17,20 +17,19 @@ test('sync', function (t) {
     let file = '/tmp/' + [x,y,z].join('/');
     
     try {
-        let cord = mkpath.sync(file, 0o755);
+        let cord = sync(file, 0755);
         console.log(typeof cord)
     } catch (err) {
         t.fail(err);
         return t.end();
     }
 
-    fs.stat(file, function (err, stat) {
+    _stat(file, function (err, stat) {
         if (err) t.fail(err)
         else {
-            t.equal(stat.mode & 0o777, 0o755);
+            t.equal(stat.mode & 0777, 0755);
             t.ok(stat.isDirectory(), 'target not a directory');
             t.end();
         }
     });
 });
-

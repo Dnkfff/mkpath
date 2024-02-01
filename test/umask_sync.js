@@ -1,9 +1,9 @@
 /* Tests borrowed from substack's node-mkdirp
  * https://github.com/substack/node-mkdirp */
 
-const mkpath = require('../');
-const fs = require('fs');
-const test = require('tap').test;
+import { sync } from '../';
+import { stat as _stat } from 'fs';
+import { test } from 'tap';
 
 test('umask sync modes', function (t) {
     t.plan(2);
@@ -14,18 +14,18 @@ test('umask sync modes', function (t) {
     let file = '/tmp/' + [x,y,z].join('/');
 
     try {
-        mkpath.sync(file);
+        sync(file);
     } catch (err) {
         t.fail(err);
         return t.end();
     }
 
-    fs.stat(file, function (err, stat) {
+    _stat(file, function (err, stat) {
         if (err) t.fail(err)
         else {
             /* The signature '(): number' of 'process.umask' is deprecated.ts(6387)
                process.d.ts(1296, 20): The declaration was marked as deprecated here. */
-            t.equal(stat.mode & 0o777, (0o777 & (~process.umask())));
+            t.equal(stat.mode & 0777, (0777 & (~process.umask())));
             t.ok(stat.isDirectory(), 'target not a directory');
             t.end();
         }

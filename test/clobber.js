@@ -1,8 +1,8 @@
 /* Tests borrowed from substack's node-mkdirp
  * https://github.com/substack/node-mkdirp */
-const mkpath = require('../');
-const fs = require('fs');
-const test = require('tap').test;
+import mkpath from '../';
+import { writeFileSync, stat as _stat } from 'fs';
+import { test } from 'tap';
 
 let ps = [ '', 'tmp' ];
 
@@ -19,9 +19,9 @@ const itw = ps.slice(0, 3).join('/');
 
 test('clobber-pre', function (t) {
     console.error("about to write to "+itw)
-    fs.writeFileSync(itw, 'I AM IN THE WAY, THE TRUTH, AND THE LIGHT.');
+    writeFileSync(itw, 'I AM IN THE WAY, THE TRUTH, AND THE LIGHT.');
 
-    fs.stat(itw, function (er, stat) {
+    _stat(itw, function (er, stat) {
         t.ifError(er)
         t.ok(stat && stat.isFile(), 'should be file')
         t.end()
@@ -30,7 +30,7 @@ test('clobber-pre', function (t) {
 
 test('clobber', function (t) {
     t.plan(2);
-    mkpath(file, 0o755, function (err) {
+    mkpath(file, 0755, function (err) {
         t.ok(err);
         t.equal(err.code, 'ENOTDIR');
         t.end();

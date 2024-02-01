@@ -1,10 +1,10 @@
 /* Tests borrowed from substack's node-mkdirp
  * https://github.com/substack/node-mkdirp */
 
-const mkpath = require('../');
-const path = require('path');
-const fs = require('fs');
-const test = require('tap').test;
+import mkpath from '../mkpath.js';
+import path from 'path';
+import { stat as _stat } from 'fs';
+import { test } from 'tap';
 
 test('implicit mode from umask', function (t) {
     t.plan(2);
@@ -16,12 +16,11 @@ test('implicit mode from umask', function (t) {
     
     mkpath(file, function (err) {
         if (err) t.fail(err);
-        else fs.stat(file, function (err, stat) {
+        else _stat(file, function (err, stat) {
             if (err) t.fail(err)
             else {
-                /*The signature '(): number' of 'process.umask' is deprecated.ts(6387)
-                  process.d.ts(1296, 20): The declaration was marked as deprecated here. */
-                t.equal(stat.mode & 0o777, 0o777 & (~process.umask()));
+                const newmask = 0o777;
+                t.equal(stat.mode & 0o777, 0o777 & (~process.umask(newmask)));
                 t.ok(stat.isDirectory(), 'target not a directory');
                 t.end();
             }
