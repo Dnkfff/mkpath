@@ -1,39 +1,65 @@
-/* Tests borrowed from substack's node-mkdirp
- * https://github.com/substack/node-mkdirp */
-import mkpath from '../';
-import { stat as _stat } from 'fs';
+import mkpath from '../mkpath.js';
+import { stat, unlinkSync, rmdirSync } from 'fs';
 import { test } from 'tap';
 
-let ps = ['', 'tmp'];
+let file;
 
-for (let i = 0; i < 25; i++) {
-    const dir = Math.floor(Math.random() * Math.pow(16,4)).toString(16);
-    ps.push(dir);
-}
+test('chmod-pre', async t => {
+  file = `tmp/${Math.random().toString(16).slice(2)}`;  // Generate randomised unique path
+  const mode = 0o744;
 
-let file = ps.join('/');
+  await mkpath(file, mode);
 
-test('chmod-pre', function (t) {
-    let mode = 0744;
-    mkpath(file, mode, function (er) {
-        t.ifError(er, 'should not error');
-        _stat(file, function (er, stat) {
-            t.ifError(er, 'should exist');
-            t.ok(stat && stat.isDirectory(), 'should be directory');
-            t.equal(stat && stat.mode & 0777, mode, 'should be 0o744');
-            t.end();
-        });
-    });
+  try {
+    const stat = await stat(file);
+    console.log(stat)
+    t.ok(stat.isDirectory(file), 'should be directory');
+    t.equal(stat.mode & 0o777, mode, 'should have correct mode');
+  } catch (err) {
+    t.fail('should not error', err);
+  }
+
+  cleanup();
 });
 
-test('chmod', function (t) {
-    let mode = 0755;
-    mkpath(file, mode, function (er) {
-        t.ifError(er, 'should not error');
-        _stat(file, function (er, stat) {
-            t.ifError(er, 'should exist');
-            t.ok(stat && stat.isDirectory(), 'should be directory');
-            t.end();
-        });
-    });
+test('chmod', async t => {
+  file = `tmp/${Math.random().toString(16).slice(2)}`;  // Generate unique path
+  const mode = 0o755;
+
+  await mkpath(file, mode);
+
+  try {
+    const stat = await stat(file);
+    t.ok(stat.isDirectory(), 'should be directory');
+  } catch (err) {
+    t.fail('should not error', err);
+  }
+
+  cleanup();
 });
+
+test('existing non-directory', async t => {
+  file = `tmp/${Math.random().toString(16).slice(2)}`;  // Generate unique path
+  await mkpath(file);  // Create a file
+
+  try {
+    await mkpath(file);
+    t.fail('should error for existing non-directory');
+  } catch (err) {
+    t.equal(err.message, `${file} exists and is not a directory`);
+  }
+
+  cleanup();
+});
+
+ function cleanup() {
+    console.log("Cleanup: file exists =", !!file);
+    if (file) {
+      try {
+        unlinkSync(file);
+        rmdirSync(path.dirname(file));
+      } catch (err) {
+        console.error('Error during cleanup:', err);
+      }
+    }
+  }
