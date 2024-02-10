@@ -4,19 +4,19 @@ import { stat, unlinkSync, rmdirSync } from 'fs';
 import fsPromises from 'fs/promises';
 import { test } from 'tap';
 
-
 let directory = `/tmp`;
-
 let state = fsPromises.stat(directory);
 
-state.then(() => {
-  let file = `tmp/${Math.random().toString(16).slice(4)}`;
-  console.log(file)
-  console.log('This runs after the Promise has resolved');
-});
+test('chmod-pre', async t => {
+  const mode = 0o744;
+  
+  t.ok(state.then(() => {
+    let file = `tmp/${Math.random().toString(16).slice(4)}`.isDirectory(directory);
+    console.log(file)
+    console.log('This runs after the Promise has resolved');
+  }))
+})
 
-// console.dir(stat);
-// console.log(directory);
 
 // test('chmod-pre', async t => {
 //    // Generate randomised unique path
