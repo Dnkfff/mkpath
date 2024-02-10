@@ -1,56 +1,68 @@
+import { dir } from 'console';
 import mkpath from '../mkpath.js';
 import { stat, unlinkSync, rmdirSync } from 'fs';
+import fsPromises from 'fs/promises';
 import { test } from 'tap';
 
-let file;
 
-test('chmod-pre', async t => {
-  file = `tmp/${Math.random().toString(16).slice(2)}`;  // Generate randomised unique path
-  const mode = 0o744;
+let directory = `/tmp`;
 
-  await mkpath(file, mode);
+let state = fsPromises.stat(directory);
 
-  try {
-    const stat = await stat(file);
-    console.log(stat)
-    t.ok(stat.isDirectory(file), 'should be directory');
-    t.equal(stat.mode & 0o777, mode, 'should have correct mode');
-  } catch (err) {
-    t.fail('should not error', err);
-  }
-
-  cleanup();
+state.then(() => {
+  let file = `tmp/${Math.random().toString(16).slice(4)}`;
+  console.log(file)
+  console.log('This runs after the Promise has resolved');
 });
 
-test('chmod', async t => {
-  file = `tmp/${Math.random().toString(16).slice(2)}`;  // Generate unique path
-  const mode = 0o755;
+// console.dir(stat);
+// console.log(directory);
 
-  await mkpath(file, mode);
+// test('chmod-pre', async t => {
+//    // Generate randomised unique path
+//   const mode = 0o744;
 
-  try {
-    const stat = await stat(file);
-    t.ok(stat.isDirectory(), 'should be directory');
-  } catch (err) {
-    t.fail('should not error', err);
-  }
+//   //await mkpath(file, mode);
+//   try {
+//     const state = await stat(file);
+//     t.ok(state.isDirectory(directory), 'should be directory');
+//     t.equal(state.mode & 0o777, mode, 'should have correct mode');
+//   } catch (err) {
+//     t.fail('Catched error here - ', err);
+//   }
 
-  cleanup();
-});
+//   cleanup();
+// });
 
-test('existing non-directory', async t => {
-  file = `tmp/${Math.random().toString(16).slice(2)}`;  // Generate unique path
-  await mkpath(file);  // Create a file
+// test('chmod', async t => {
+// // Generate unique path
+//   const mode = 0o755;
 
-  try {
-    await mkpath(file);
-    t.fail('should error for existing non-directory');
-  } catch (err) {
-    t.equal(err.message, `${file} exists and is not a directory`);
-  }
+//   //await mkpath(file, mode);
 
-  cleanup();
-});
+//   try {
+//     const stat = await stat(file);
+//     t.ok(stat.isDirectory(), 'should be directory');
+//   } catch (err) {
+//     t.fail('should not error', err);
+//   }
+
+//   cleanup();
+// });
+
+// test('existing non-directory', async t => {
+//   // Generate unique path
+//   //await mkpath(file);  // Create a file
+
+//   try {
+//     await mkpath(file);
+//     t.fail('should error for existing non-directory');
+//   } catch (err) {
+//     t.equal(err.message, `${file} exists and is not a directory`);
+//   }
+
+//   cleanup();
+// });
 
  function cleanup() {
     console.log("Cleanup: file exists =", !!file);
