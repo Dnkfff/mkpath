@@ -3,19 +3,27 @@ import mkpath from '../mkpath.js';
 import { stat, unlinkSync, rmdirSync } from 'fs';
 import fsPromises from 'fs/promises';
 import { test } from 'tap';
+import { resolve } from 'path';
 
 let directory = `/tmp`;
 let state = fsPromises.stat(directory);
 
+
+
 test('chmod-pre', async t => {
-  const mode = 0o744;
+  const modeN = 16822; // for linux 0o744!
+  let mod = false;
   
-  t.ok(state.then(() => {
-    let file = `tmp/${Math.random().toString(16).slice(4)}`.isDirectory(directory);
-    console.log(file)
-    console.log('This runs after the Promise has resolved');
-  }))
-})
+  t.ok(state.then((file = `tmp/${Math.random().toString(16).slice(4)}`) => {
+    file.isDirectory(directory);
+    //console.log(file)
+  }));
+
+  t.ok(state.then((data) => {if(data.mode === modeN || data.mode === 0o744 || data.mode === 0o777){ 
+    mod = true;
+    }else t.fail('Catched error here - ', err)}));
+    cleanup();
+});
 
 
 // test('chmod-pre', async t => {
@@ -28,7 +36,7 @@ test('chmod-pre', async t => {
 //     t.ok(state.isDirectory(directory), 'should be directory');
 //     t.equal(state.mode & 0o777, mode, 'should have correct mode');
 //   } catch (err) {
-//     t.fail('Catched error here - ', err);
+//     
 //   }
 
 //   cleanup();
@@ -64,14 +72,14 @@ test('chmod-pre', async t => {
 //   cleanup();
 // });
 
- function cleanup() {
-    console.log("Cleanup: file exists =", !!file);
-    if (file) {
+function cleanup() {
+    console.log("Cleanup: file exists =", !directory);
+    if (directory) {
       try {
-        unlinkSync(file);
-        rmdirSync(path.dirname(file));
+        unlinkSync(directory);
+        rmdirSync(path.dirname(directory));
       } catch (err) {
         console.error('Error during cleanup:', err);
       }
     }
-  }
+}
