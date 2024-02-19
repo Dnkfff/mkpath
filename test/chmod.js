@@ -35,19 +35,19 @@ test('chmod', async t => {
 cleanup();
 });
 
-// test('existing non-directory', async t => {
-//   // Generate unique path
-//   //await mkpath(directory);  // Create a file
-
-//   try {
-//     await mkpath(directory);
-//     t.fail('should error for existing non-directory');
-//   } catch (err) {
-//     t.equal(err.message, `${directory} exists and is not a directory`);
-//   }
-
-//  cleanup();
-// });
+test('existing non-directory', async t => {
+  // Generate unique path
+  //await mkpath(directory);  // Create a file
+  console.log(state.then((data) => console.log(data)))
+  try {
+    await mkpath(directory);
+    t.fail('should error for existing non-directory');
+  } catch (err) {
+    t.equal(err.message, `${directory} exists and is not a directory`);
+  }
+  if (err) console.log(err)
+  //cleanup();
+});
 
 function cleanup() {
     console.log("Cleanup: file exists =", !directory);
