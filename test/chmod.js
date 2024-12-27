@@ -1,12 +1,10 @@
 import mkpath from '../mkpath.js';
-import { stat, unlinkSync, rmdirSync, existsSync } from 'fs';
+import { existsSync } from 'fs';
 import fsPromises from 'fs/promises';
 import { test } from 'tap';
-import { resolve, dirname } from 'path';
 
 
 let directory = `./tmp`;  // Relative path; can also use an absolute path
-let nonDirectoryPath = `./tmp/non-directory-file`;
 let state;
 
 test('setup', t => {
