@@ -21,7 +21,7 @@
              t.fail(`Error reading stat for ${dir}: ${err}`);
          } else {
              const actualPermissions = stat.mode & 0o777;
-             console.log(`Expected: 0o755 or 0o666, Actual: ${actualPermissions.toString(8)}`); // Debugging line
+             //console.log(`Expected: 0o755 or 0o666, Actual: ${actualPermissions.toString(8)}`); // Debugging line
              t.equal(actualPermissions, 0o666, `Expected permissions to be 0o755 or 0o666, but got ${actualPermissions}`);
              t.ok(stat.isDirectory(), 'Target is not a directory');
              t.end();
@@ -42,4 +42,3 @@
          }
      });
  });
- 

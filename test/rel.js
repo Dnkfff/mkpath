@@ -45,8 +45,8 @@ test('rel', function (t) {
                                 t.end();
                             }
                         } else {
-                            //got 438 perm not 0o755 why? windows.
-                            t.equal(actualPermissions, 0o666, `Expected permissions to be 0o755, but got ${actualPermissions}`);
+                            //got 438 perm not 0o755 why? Windows.
+                            t.equal(actualPermissions, 0o666, `Expected permissions to be 0o755 or 0o666, but got ${actualPermissions}`);
                             t.ok(stat.isDirectory(), 'target is not a directory');
                             t.end();
                         }

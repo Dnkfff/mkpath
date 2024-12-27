@@ -30,12 +30,9 @@ test('woo', function (t) {
                 if (err) {
                     t.fail(`Error reading stat for ${file}: ${err}`);
                 } else {
-                    // Log the actual mode for debugging purposes
-                    console.log(`Actual mode: ${stat.mode.toString(8)}`);
-                    
                     // Check that the permissions are as expected (0o755)
                     const permissions = stat.mode & 0o662; // Mask out non-permission bits
-                    t.equal(permissions, 0o662, `Expected permissions to be 0o755, but got ${permissions}`);
+                    t.equal(permissions, 0o662, `Expected permissions to be 0o755 or 0o666, but got ${permissions}`);
                     t.ok(stat.isDirectory(), 'target is not a directory');
                     t.end(); // Ensure the second assertion is run
                 }

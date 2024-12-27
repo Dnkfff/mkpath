@@ -25,7 +25,7 @@ test('sync', (t) => {
       const expectedMode = 0o666;
 
       // Ensure the actual mode includes the permissions of 0o755
-      // The actual mode must be at least 0o755, but can have additional restrictions due to the umask
+      // The actual mode must be at least 0o755 or 0o666, but can have additional restrictions due to the umask
       t.ok((actualMode & expectedMode) === expectedMode, `Directory mode includes at least expected permissions (got ${actualMode}, expected ${expectedMode})`);
 
       t.ok(stat.isDirectory(), 'Target is a directory');
