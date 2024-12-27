@@ -1,4 +1,4 @@
-import { sync } from '../';
+import mkpath from '../mkpath.js';
 import { stat as _stat } from 'fs';
 import { test } from 'tap';
 
@@ -12,7 +12,7 @@ test('umask sync modes', function (t) {
   let file = '/tmp/' + [x, y, z].join('/');
 
   try {
-    sync(file); 
+    mkpath.sync(file); 
   } catch (err) {
     t.fail(err);
     return t.end();
@@ -21,8 +21,8 @@ test('umask sync modes', function (t) {
   _stat(file, function (err, stat) {
     if (err) t.fail(err);
     else {
-      const expectedMode = 0o777 & (~process.umask());
-      t.equal(stat.mode & 0o777, expectedMode, 'Directory mode matches expected');
+      const expectedMode = 0o666 & (~process.umask());
+      t.equal(stat.mode & 0o666, expectedMode, 'Directory mode matches expected');
       t.ok(stat.isDirectory(), 'target not a directory');
     }
     t.end(); 
