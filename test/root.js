@@ -1,6 +1,3 @@
-/* Tests borrowed from substack's node-mkdirp
- * https://github.com/substack/node-mkdirp */
-
 import mkpath from '../mkpath.js';
 import { resolve } from 'path';
 import { stat as _stat } from 'fs';

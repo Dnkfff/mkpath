@@ -3,7 +3,6 @@ import { existsSync } from 'fs';
 import fsPromises from 'fs/promises';
 import { test } from 'tap';
 
-
 let directory = `./tmp`;  // Relative path; can also use an absolute path
 let state;
 
