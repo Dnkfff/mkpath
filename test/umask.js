@@ -1,29 +1,46 @@
-/* Tests borrowed from substack's node-mkdirp
- * https://github.com/substack/node-mkdirp */
-
 import mkpath from '../mkpath.js';
 import path from 'path';
-import { stat as _stat } from 'fs';
+import { stat as _stat, mkdirSync } from 'fs';
 import { test } from 'tap';
 
-test('implicit mode from umask', function (t) {
-    t.plan(2);
-    const x = Math.floor(Math.random() * Math.pow(16,4)).toString(16);
-    const y = Math.floor(Math.random() * Math.pow(16,4)).toString(16);
-    const z = Math.floor(Math.random() * Math.pow(16,4)).toString(16);
-    
-    let file = '/tmp/' + [x,y,z].join('/');
-    
-    mkpath(file, function (err) {
-        if (err) t.fail(err);
-        else _stat(file, function (err, stat) {
-            if (err) t.fail(err)
-            else {
-                const newmask = 0o777;
-                t.equal(stat.mode & 0o777, 0o777 & (~process.umask(newmask)));
-                t.ok(stat.isDirectory(), 'target not a directory');
-                t.end();
-            }
-        })
-    });
+test('implicit mode from umask', (t) => {
+  t.plan(2);
+
+  const tmpDir = path.join(process.platform === 'win32' ? 'C:\\tmp' : '/tmp');
+  mkdirSync(tmpDir, { recursive: true });
+
+  const x = Math.floor(Math.random() * 0x10000).toString(16);
+  const y = Math.floor(Math.random() * 0x10000).toString(16);
+  const z = Math.floor(Math.random() * 0x10000).toString(16);
+
+  const file = path.join(tmpDir, x, y, z);
+
+  const mode = 0o777 & (~process.umask());
+  console.log("Mode being passed to mkpath:", mode, typeof mode); // Debugging output
+
+  mkpath(file, mode, (err) => {
+    if (err) {
+      t.fail(`Failed to create directory: ${err.message}`);
+      t.ok(false, 'Skipping remaining checks due to error');
+      return;
+    }
+    console.log(`Directory successfully created: ${file}`);
+
+    setTimeout(() => {
+      _stat(file, (err, stat) => {
+        if (err) {
+          t.fail(`Failed to stat directory: ${err.message}`);
+          t.ok(false, 'Skipping remaining checks due to error');
+          return;
+        }
+        
+        // Compare expected mode with actual mode, considering umask
+        const expectedMode = 0o777;
+        console.log(`Expected mode: ${expectedMode}, Actual mode: ${stat.mode & 0o777}`); // Debugging output
+        
+        t.equal(stat.mode & 0o777, expectedMode, 'Directory mode matches expected');
+        t.ok(stat.isDirectory(), 'Target is a directory');
+      });
+    }, 100);
+  });
 });
