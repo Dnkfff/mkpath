@@ -24,7 +24,14 @@ const mkpath = (dirpath, mode = defaultMode, callback) => {
             callback(err);
           } else {
             console.log('Creating directory with mode:', mode); // Debugging output
-            fs.mkdir(dirpath, { mode, recursive: true }, callback);
+            fs.mkdir(dirpath, { mode, recursive: true }, (err) => {
+              if (err) {
+                callback(err);
+              } else {
+                // Ensure the permissions are exactly what we want
+                fs.chmod(dirpath, mode, callback);
+              }
+            });
           }
         });
       } else {
@@ -50,6 +57,8 @@ mkpath.sync = (dirpath, mode = defaultMode) => {
   try {
     console.log('Creating directory (sync) with mode:', mode); // Debugging output
     fs.mkdirSync(dirpath, { mode, recursive: true });
+    // Ensure the permissions are exactly what we want
+    fs.chmodSync(dirpath, mode);
   } catch (err) {
     if (err.code !== 'EEXIST') {
       throw err;
