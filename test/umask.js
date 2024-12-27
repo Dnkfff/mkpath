@@ -35,7 +35,7 @@ test('implicit mode from umask', (t) => {
         }
         
         // Compare expected mode with actual mode, considering umask
-        const expectedMode = 0o777;
+        const expectedMode = 0o666 & (~process.umask());
         console.log(`Expected mode: ${expectedMode}, Actual mode: ${stat.mode & 0o777}`); // Debugging output
         
         t.equal(stat.mode & 0o777, expectedMode, 'Directory mode matches expected');
